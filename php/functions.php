@@ -1,4 +1,48 @@
 <?php
+/**
+ *
+ * $ex = [
+ *     InvalidArgumentException::class,
+ *     ClientException::class,
+ * ];
+ *
+ * retry_exception($ex, 3, function () {
+ *     dump('try');
+ *     throw new InvalidArgumentException();
+ * });
+ *
+ * @param array $exceptions What exceptions need to be retried
+ * @param $times
+ * @param callable $callback
+ * @param int $sleep
+ * @return
+ * @throws Exception
+ */
+function retry_exception(array $exceptions, $times, callable $callback, $sleep = 0)
+{
+    $times--;
+
+    beginning:
+    try {
+        return $callback();
+    } catch (Exception $e) {
+        $any = array_filter($exceptions, function ($ex) use ($e) {
+            return $e instanceof $ex;
+        });
+
+        if (!$any || !$times) {
+            throw $e;
+        }
+
+        $times--;
+
+        if ($sleep) {
+            usleep($sleep * 1000);
+        }
+
+        goto beginning;
+    }
+}
 
 /**
  * Inline profiler :)
