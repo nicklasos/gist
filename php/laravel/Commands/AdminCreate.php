@@ -3,7 +3,6 @@
 namespace App\Console\Commands;
 
 use App\User;
-use App\Http\Requests\AdminAdminCreateRequest;
 use Illuminate\Console\Command;
 use Validator;
 
@@ -14,6 +13,8 @@ class AdminCreate extends Command
 
     public function handle()
     {
+        $email = $this->argument('email');
+        $role = $this->argument('role');
         $password = $this->secret('Type password');
         $repeat = $this->secret('Repeat');
 
@@ -22,9 +23,9 @@ class AdminCreate extends Command
             exit();
         }
 
-        $validator = Validator::make($this->arguments(), [
-            'email' => 'required|string|email|max:255|unique:admins',
-            'password' => 'required|string|min:6',
+        $validator = Validator::make(compact('email', 'password', 'role'), [
+            'email' => 'required|string|email|max:255|unique:users',
+            'password' => 'required|string|min:3',
             'role' => 'required|in:admin',
         ]);
 
