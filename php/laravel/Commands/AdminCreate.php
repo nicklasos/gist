@@ -2,7 +2,7 @@
 
 namespace App\Console\Commands;
 
-use App\Admin;
+use App\User;
 use App\Http\Requests\AdminAdminCreateRequest;
 use Illuminate\Console\Command;
 use Validator;
@@ -36,7 +36,7 @@ class AdminCreate extends Command
         $email = $this->argument('email');
         $role = $this->argument('role');
 
-        Admin::create([
+        User::create([
             'name' => str_before($email, '@'),
             'email' => $email,
             'role' => $role,
