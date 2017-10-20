@@ -1,5 +1,10 @@
 # Linux
 
+Grep with awk
+```bash
+tail -f /var/log/nginx/access.log | awk '/200/ {print $9" "$7}'
+```
+
 Set vim as default ediotr
 ```bash
 sudo update-alternatives --config editor
