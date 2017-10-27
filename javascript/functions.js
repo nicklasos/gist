@@ -15,3 +15,27 @@ function guid() {
   return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
       s4() + '-' + s4() + s4() + s4();
 }
+
+/**
+ * <p onclick="copyToClip(this)">text</p>
+ */
+function copyToClip(e) {
+  try {
+    var range;
+    var selection;
+
+    if (document.body.createTextRange) {
+      range = document.body.createTextRange();
+      range.moveToElementText(e);
+      range.select();
+    } else if (window.getSelection) {
+      selection = window.getSelection();
+      range = document.createRange();
+      range.selectNodeContents(e);
+      selection.removeAllRanges();
+      selection.addRange(range);
+    }
+
+    document.execCommand('copy');
+  } catch (e) {}
+};
