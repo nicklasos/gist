@@ -1,5 +1,11 @@
 # Linux
 
+Show biggest folders
+```bash
+cd /var/www
+du -hsx * | sort -rh | head -10
+```
+
 Grep with awk
 ```bash
 tail -f /var/log/nginx/access.log | awk '/200/ {print $9" "$7}'
