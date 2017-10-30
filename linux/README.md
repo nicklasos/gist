@@ -6,6 +6,11 @@ cd /var/www
 du -hsx * | sort -rh | head -10
 ```
 
+Remove files from subfolders
+```bash
+find . -name "*.png" -type f -delete
+```
+
 Grep with awk
 ```bash
 tail -f /var/log/nginx/access.log | awk '/200/ {print $9" "$7}'
