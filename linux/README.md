@@ -1,5 +1,16 @@
 # Linux
 
+Show biggest folders
+```bash
+cd /var/www
+du -hsx * | sort -rh | head -10
+```
+
+Remove files from subfolders
+```bash
+find . -name "*.png" -type f -delete
+```
+
 Grep with awk
 ```bash
 tail -f /var/log/nginx/access.log | awk '/200/ {print $9" "$7}'
@@ -90,4 +101,25 @@ cat /home/root/.pm2/logs/error.log | grep -oP 'There was an error (.*)'
 History commands count
 ```bash
 history | awk '{print $2}' | sort | uniq -c | sort -rn | head
+```
+
+## Fail2Ban
+Status
+```bash
+fail2ban-client status nginx-limit-req
+```
+
+Iptables banned amount of ip
+```bash
+iptables -S | grep 'limit-req -s' | wc -l
+```
+
+Nginx
+```
+# http section
+limit_req_zone $binary_remote_addr zone=lr_zone:10m rate=10r/s;
+limit_req_status 444;
+
+# location
+limit_req zone=lr_zone burst=10 nodelay;
 ```
