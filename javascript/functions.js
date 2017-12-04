@@ -1,3 +1,7 @@
+function randomFromTo(min, max) {
+  return Math.random() * (max - min) + min;
+}
+
 function chunk(size, array) {
   const result = [];
 
