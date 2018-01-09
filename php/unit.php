@@ -16,3 +16,34 @@ $mock = new MockHandler([
 $client = new Client([
     'handler' => HandlerStack::create($mock),
 ]);
+
+
+if (!function_exists('private_field')) {
+    /**
+     * Only for unit tests
+     *
+     * @param $object
+     * @param string $field
+     * @return mixed
+     */
+    function private_field($object, string $field)
+    {
+        $reflection = new \ReflectionProperty(get_class($object), $field);
+        $reflection->setAccessible(true);
+
+        return $reflection->getValue($object);
+    }
+}
+
+if (!function_exists('private_method')) {
+    /**
+     * $class = new Class();
+     * $result = private_method($class, function() {
+     *     return $this->privateMethod();
+     * });
+     */
+    function private_method($object, \Closure $call)
+    {
+        return $call->call($object);
+    }   
+}
