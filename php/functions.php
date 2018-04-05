@@ -105,7 +105,7 @@ function noise()
  * @param DateTime $endDate Date should be before this date to return true
  * @return bool
  */
-function isDateBetweenDates(DateTime $date, DateTime $startDate, DateTime $endDate): bool
+function is_date_between_dates(DateTime $date, DateTime $startDate, DateTime $endDate): bool
 {
     return $date > $startDate && $date < $endDate;
 }
@@ -217,4 +217,18 @@ function secs_to_h($secs)
         }
     }
     return substr($s, 0, -2);
+}
+
+function array_to_csv($data, $delimiter = ',', $enclosure = '"') {
+       $handle = fopen('php://temp', 'r+');
+       foreach ($data as $line) {
+               fputcsv($handle, $line, $delimiter, $enclosure);
+       }
+       rewind($handle);
+       while (!feof($handle)) {
+               $contents .= fread($handle, 8192);
+       }
+       fclose($handle);
+    
+       return $contents;
 }
