@@ -4,12 +4,21 @@ import Vuex from 'vuex';
 Vue.use(Vuex);
 
 const state = {
+  user: window.user,
+  config: window.config,
   notification: {
     active: false,
     title: '',
     body: '',
   },
   confirmation: {
+    active: false,
+    title: '',
+    body: '',
+    resolve: null,
+    reject: null,
+  },
+  editation: {
     active: false,
     title: '',
     body: '',
@@ -36,6 +45,18 @@ const mutations = {
       reject: null,
     };
   },
+  showEditation(state, payload) {
+    Object.assign(state.editation, payload);
+  },
+  hideEditation(state) {
+    state.editation = {
+      active: false,
+      title: '',
+      body: '',
+      resolve: null,
+      reject: null,
+    };
+  },
 };
 
 const actions = {
@@ -50,9 +71,22 @@ const actions = {
       });
     });
   },
+  edit({commit}, {title, body}) {
+    return new Promise((resolve, reject) => {
+      commit('showEditation', {
+        active: true,
+        title,
+        body,
+        resolve,
+        reject,
+      });
+    });
+  },
 };
 
-const getters = {};
+const getters = {
+  auth: store => store.user.auth,
+};
 
 export default new Vuex.Store({
   state,
