@@ -38,8 +38,6 @@ class Paginate
             ];
         };
 
-        $give = Closure::bind($map, $paginator, get_class($paginator));
-
-        return $give();
+        return Closure::bind($map, $paginator, get_class($paginator))();
     }
 }
