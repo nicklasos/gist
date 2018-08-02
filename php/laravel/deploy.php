@@ -61,7 +61,7 @@ host('127.0.0.1')
 // Tasks
 desc('Restart PHP-FPM service');
 task('deploy:php:reload', function () {
-    run('for s in $( service --status-all | grep -o "\bphp.*fpm\b" ); do sudo service $s restart; done');
+    run('for s in $( service --status-all | grep -o "\bphp.*fpm\b" ); do sudo service $s reload; done');
 });
 
 desc('Build assets');
