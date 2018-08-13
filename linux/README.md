@@ -143,19 +143,19 @@ if ($mobile_rewrite = perform) {
 ```
 
 # Siege
+
 [Stress test](https://www.joedog.org/siege-home/)
 
 ```
 # on server
 # note that version 4 is shitty
-curl -O http://download.joedog.org/siege/siege-3.1.0.tar.gz
-tar -xvf siege-3.1.0.tar.gz
-cd siege-3.1.0
+curl -O http://download.joedog.org/siege/siege-4.0.4.tar.gz
+tar -xvf siege-4.0.4.tar.gz
+cd siege-4.0.4
 ./configure
 make
 make install
 
-
-siege -d3 -r10 -c100 http://ip-adress/
-
+siege -d3 -r10 -c100 --no-parser http://localhost
 ```
+
