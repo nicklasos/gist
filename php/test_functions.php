@@ -3,7 +3,6 @@
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
 use Mockery\Matcher\AnyArgs;
-use Mockery\Matcher\NoArgs;
 
 if (!function_exists('fixture')) {
     function fixture(string $file): string
@@ -53,6 +52,22 @@ if (!function_exists('mock_guzzle')) {
         $handler = HandlerStack::create($mock);
 
         return new \GuzzleHttp\Client(['handler' => $handler]);
+    }
+}
+
+if (!function_exists('mock_guzzle_response')) {
+    function mock_guzzle_response($content): \Psr\Http\Message\ResponseInterface
+    {
+        $mock = new MockHandler([
+            new \GuzzleHttp\Psr7\Response(200, [], $content),
+        ]);
+
+        /** @var \GuzzleHttp\Client $client */
+        $handler = HandlerStack::create($mock);
+
+        $client = new \GuzzleHttp\Client(['handler' => $handler]);
+
+        return $client->get('/');
     }
 }
 
