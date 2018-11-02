@@ -1,5 +1,7 @@
 <?php
 
+use GuzzleHttp\Handler\MockHandler;
+use GuzzleHttp\HandlerStack;
 use Mockery\Matcher\AnyArgs;
 use Mockery\Matcher\NoArgs;
 
@@ -38,6 +40,22 @@ if (!function_exists('mock_ip')) {
     }
 }
 
+if (!function_exists('mock_guzzle')) {
+    /**
+     * @param \GuzzleHttp\Psr7\Response[] $responses
+     * @return \GuzzleHttp\Client
+     */
+    function mock_guzzle(array $responses): \GuzzleHttp\Client
+    {
+        $mock = new MockHandler($responses);
+
+        /** @var \GuzzleHttp\Client $client */
+        $handler = HandlerStack::create($mock);
+
+        return new \GuzzleHttp\Client(['handler' => $handler]);
+    }
+}
+
 /**
  * Mockery
  *
@@ -57,28 +75,28 @@ if (!function_exists('mock_ip')) {
  * @license    http://github.com/padraic/mockery/blob/master/LICENSE New BSD License
  */
 
-if (!function_exists("mock")) {
+if (!function_exists('mock')) {
     function mock(...$args)
     {
         return call_user_func_array([Mockery::class, "mock"], $args);
     }
 }
 
-if (!function_exists("spy")) {
+if (!function_exists('spy')) {
     function spy(...$args)
     {
         return call_user_func_array([Mockery::class, "spy"], $args);
     }
 }
 
-if (!function_exists("namedMock")) {
+if (!function_exists('namedMock')) {
     function namedMock(...$args)
     {
         return call_user_func_array([Mockery::class, "namedMock"], $args);
     }
 }
 
-if (!function_exists("anyArgs")) {
+if (!function_exists('anyArgs')) {
     function anyArgs()
     {
         return new AnyArgs();
