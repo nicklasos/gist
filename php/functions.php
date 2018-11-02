@@ -15,10 +15,10 @@
  * @param $times
  * @param callable $callback
  * @param int $sleep
- * @return
+ * @return mixed
  * @throws Exception
  */
-function retry_exception(array $exceptions, $times, callable $callback, $sleep = 0)
+function retry_exception(array $exceptions, int $times, callable $callback, int $sleep = 0)
 {
     $times--;
 
