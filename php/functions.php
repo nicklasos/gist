@@ -232,3 +232,8 @@ function array_to_csv($data, $delimiter = ',', $enclosure = '"') {
     
        return $contents;
 }
+
+function break_long_words(string $text, string $size = 20, string $delimiter = ' ')
+{
+    return preg_replace('/([^\s]{'.$size.'})(?=[^\s])/u', '$1' . $delimiter, $text);
+}
