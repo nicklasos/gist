@@ -1,3 +1,13 @@
+export function money(n) {
+    try {
+        const num = n.toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        return (n < 0) ? num.replace('-', '-$') : '$' + num;
+    } catch (e) {
+        console.error('error money', n);
+        return n;
+    }
+}
+
 function randomFromTo(min, max) {
   return Math.random() * (max - min) + min;
 }
