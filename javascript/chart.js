@@ -23,6 +23,8 @@ const colors = {
     },
 };
 
+let ids = {};
+
 export function chart(id, params) {
 
     let {
@@ -42,25 +44,33 @@ export function chart(id, params) {
         },
     };
 
-    new Chart(document.getElementById(id).getContext('2d'), {
-        type,
-        options: _.merge(defaultOptions, options),
-        data: {
-            labels,
-            datasets: datasets.map(dataset => {
-                let item = {
-                    borderWidth: dataset.borderWidth || 1,
-                    pointRadius: dataset.pointRadius || 2,
-                    fill: dataset.fill || false,
-                };
+    const data = datasets.map(dataset => {
+        let item = {
+            borderWidth: dataset.borderWidth || 1,
+            pointRadius: dataset.pointRadius || 2,
+            fill: dataset.fill || false,
+        };
 
-                if (dataset.hasOwnProperty('color')) {
-                    item.borderColor = colors[dataset.color].borderColor;
-                    item.backgroundColor = colors[dataset.color].backgroundColor;
-                }
+        if (dataset.hasOwnProperty('color')) {
+            item.borderColor = colors[dataset.color].borderColor;
+            item.backgroundColor = colors[dataset.color].backgroundColor;
+        }
 
-                return _.merge(dataset, item);
-            }),
-        },
+        return _.merge(dataset, item);
     });
+
+    if (ids.hasOwnProperty(id)) {
+        ids[id].data.labels = labels;
+        ids[id].data.datasets = data;
+        ids[id].update();
+    } else {
+        ids[id] = new Chart(document.getElementById(id).getContext('2d'), {
+            type,
+            options: _.merge(defaultOptions, options),
+            data: {
+                labels,
+                datasets: data,
+            },
+        });
+    }
 }
