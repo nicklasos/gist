@@ -23,54 +23,58 @@ const colors = {
     },
 };
 
-let ids = {};
+export class ChartJS {
+    constructor() {
+        this.ids = {};
+    }
 
-export function chart(id, params) {
+    draw(id, params) {
 
-    let {
-        type,
-        labels,
-        options,
-        datasets,
-    } = params;
+        let {
+            type,
+            labels,
+            options,
+            datasets,
+        } = params;
 
-    type = type || 'line';
-    options = options || {};
+        type = type || 'line';
+        options = options || {};
 
-    const defaultOptions = {
-        tooltips: {
-            mode: 'index',
-            intersect: false,
-        },
-    };
-
-    const data = datasets.map(dataset => {
-        let item = {
-            borderWidth: dataset.borderWidth || 1,
-            pointRadius: dataset.pointRadius || 2,
-            fill: dataset.fill || false,
+        const defaultOptions = {
+            tooltips: {
+                mode: 'index',
+                intersect: false,
+            },
         };
 
-        if (dataset.hasOwnProperty('color')) {
-            item.borderColor = colors[dataset.color].borderColor;
-            item.backgroundColor = colors[dataset.color].backgroundColor;
-        }
+        const data = datasets.map(dataset => {
+            let item = {
+                borderWidth: dataset.borderWidth || 1,
+                pointRadius: dataset.pointRadius || 2,
+                fill: dataset.fill || false,
+            };
 
-        return _.merge(dataset, item);
-    });
+            if (dataset.hasOwnProperty('color')) {
+                item.borderColor = colors[dataset.color].borderColor;
+                item.backgroundColor = colors[dataset.color].backgroundColor;
+            }
 
-    if (ids.hasOwnProperty(id)) {
-        ids[id].data.labels = labels;
-        ids[id].data.datasets = data;
-        ids[id].update();
-    } else {
-        ids[id] = new Chart(document.getElementById(id).getContext('2d'), {
-            type,
-            options: _.merge(defaultOptions, options),
-            data: {
-                labels,
-                datasets: data,
-            },
+            return _.merge(dataset, item);
         });
+
+        if (this.ids.hasOwnProperty(id)) {
+            this.ids[id].data.labels = labels;
+            this.ids[id].data.datasets = data;
+            this.ids[id].update();
+        } else {
+            this.ids[id] = new Chart(document.getElementById(id).getContext('2d'), {
+                type,
+                options: _.merge(defaultOptions, options),
+                data: {
+                    labels,
+                    datasets: data,
+                },
+            });
+        }
     }
 }
