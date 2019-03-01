@@ -94,5 +94,7 @@ export class ChartJS {
         Object.keys(this.ids).forEach(id => {
             this.ids[id].destroy();
         });
+
+        this.ids = {};
     }
 }
