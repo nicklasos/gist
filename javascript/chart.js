@@ -18,9 +18,21 @@ const colors = {
         backgroundColor: 'rgb(156, 39, 176, 0.8)',
     },
     orange: {
-        borderColor: 'rgb(255, 87, 34)',
-        backgroundColor: 'rgb(255, 87, 34, 0.8)',
+        borderColor: 'rgb(255, 159, 50)',
+        backgroundColor: 'rgb(255, 159, 50, 0.8)',
     },
+    yellow: {
+        borderColor: 'rgb(255, 206, 73)',
+        backgroundColor: 'rgb(255, 206, 73, 0.8)',
+    },
+    lightyellow: {
+        borderColor: 'rgb(255, 231, 166)',
+        backgroundColor: 'rgb(255, 231, 166, 0.8)',
+    },
+    grey: {
+        borderColor: 'rgb(201, 203, 207)',
+        backgroundColor: 'rgb(201, 203, 207, 0.8)',
+    }
 };
 
 export class ChartJS {
@@ -49,8 +61,8 @@ export class ChartJS {
 
         const data = datasets.map(dataset => {
             let item = {
-                borderWidth: dataset.borderWidth || 1,
-                pointRadius: dataset.pointRadius || 2,
+                borderWidth: dataset.hasOwnProperty('borderWidth') ? dataset.borderWidth : 1,
+                pointRadius: dataset.hasOwnProperty('pointRadius') ? dataset.pointRadius : 2,
                 fill: dataset.fill || false,
             };
 
@@ -72,9 +84,15 @@ export class ChartJS {
                 options: _.merge(defaultOptions, options),
                 data: {
                     labels,
-                    datasets: data,
+                    datasets: data
                 },
             });
         }
+    }
+
+    destroyAll() {
+        Object.keys(this.ids).forEach(id => {
+            this.ids[id].destroy();
+        });
     }
 }
