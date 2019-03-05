@@ -45,3 +45,14 @@ select leaders.*, (@row_number:=@row_number + 1) AS position from (
 
 ) as leaders, (SELECT @row_number:=0) AS t;
 ```
+
+
+#### Leader board
+```sql
+select * from leader_board where instance_id = 3125 and position = 4  
+union all  
+(select * from leader_board where instance_id = 3125 and position < 4  order by position desc limit 1)
+union all  
+(select * from leader_board where instance_id = 3125 and position > 4 order by position asc limit 1)
+order by position;
+```
