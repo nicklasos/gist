@@ -26,3 +26,22 @@ select * from bid_logs where id in (
 	select max(id) from bid_logs group by country 
 );
 ```
+
+
+#### ROW NUMBER
+```sql
+insert into leader_board (giveaway_instance_id, user_id, tokens, position)
+
+select leaders.*, (@row_number:=@row_number + 1) AS position from (
+
+	select
+		giveaway_instance_id, user_id, sum(tokens) as tokens
+	from
+		action_finish_events
+	where
+		giveaway_instance_id = 3125 and tokens > 0
+	group by user_id
+	order by `tokens` desc
+
+) as leaders, (SELECT @row_number:=0) AS t;
+```
