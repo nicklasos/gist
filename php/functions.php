@@ -237,3 +237,28 @@ function break_long_words(string $text, string $size = 20, string $delimiter = '
 {
     return preg_replace('/([^\s]{'.$size.'})(?=[^\s])/u', '$1' . $delimiter, $text);
 }
+
+/**
+ * convert
+ *
+ * id, name, genre
+ * 1, mario, platformer
+ * 2, splatoon, shooter
+ *
+ * to
+ *
+ * [['id' => 1, 'name' => 'mario', 'genre' => 'platformer'], ...]
+ *
+ * @param string $path example: base_path('stuff/geotargets.csv')
+ * @return array
+ */
+function load_csv_to_array(string $path): array
+{
+    $csv = array_map('str_getcsv', file($path));
+    array_walk($csv, function (&$a) use ($csv) {
+        $a = array_combine($csv[0], $a);
+    });
+    array_shift($csv);
+
+    return $csv;
+}
