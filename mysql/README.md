@@ -56,3 +56,10 @@ union all
 (select * from leader_board where instance_id = 3125 and position > 4 order by position asc limit 1)
 order by position;
 ```
+
+
+#### Dates
+```sql
+#date format
+update table set date = date_format(created_at, '%Y-%m-%d %H:%i:00');
+```
