@@ -53,3 +53,23 @@ function copyToClip(e) {
     document.execCommand('copy');
   } catch (e) {}
 };
+
+
+
+
+function escapeHtml (string) {
+  const entityMap = {
+      '&': '&amp;',
+      '<': '&lt;',
+      '>': '&gt;',
+      '"': '&quot;',
+      "'": '&#39;',
+      '/': '&#x2F;',
+      '`': '&#x60;',
+      '=': '&#x3D;'
+    };
+  
+    return String(string).replace(/[&<>"'`=\/]/g, function (s) {
+        return entityMap[s];
+    });
+}
