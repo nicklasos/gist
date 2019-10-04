@@ -262,3 +262,32 @@ function load_csv_to_array(string $path): array
 
     return $csv;
 }
+
+/**
+ * [$result, $assigned] = ab_test('ab-test-name');
+ * $result = 'old' / 'new';
+ * $assigned = bool
+ * 
+ * @param string $test
+ * @return array
+ */
+function ab_test(string $test)
+{
+    $tests = [
+        'ab-test-name' => ['old', 'new'],
+    ];
+
+    $assigned = false;
+
+    $result = $_COOKIE['ab-' . $test] ?? false;
+
+    if (!$result) {
+        $result = $tests[$test][mt_rand(0, count($tests[$test]) - 1)];
+
+        setcookie('ab-' . $test, (string) $result, time() + 10 * 365 * 24 * 60 * 60, '/');
+
+        $assigned = true;
+    }
+
+    return [$result, $assigned];
+}
