@@ -1,0 +1,16 @@
+
+# Locate site in suburl of main site
+location /new-trivia {
+        alias /var/www/sub-site/public;
+        try_files $uri $uri/ @nested;
+
+        location ~ \.php$ {
+                include snippets/fastcgi-php.conf;
+                fastcgi_param SCRIPT_FILENAME $request_filename;
+                fastcgi_pass unix:/var/run/php/php7.2-fpm.sock;
+        }
+}
+
+location @nested {
+        rewrite /sub-url/(.*)$ /sub-urlkjj/index.php?/$1 last;
+}
