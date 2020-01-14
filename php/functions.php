@@ -219,19 +219,102 @@ function secs_to_h($secs)
     return substr($s, 0, -2);
 }
 
-function array_to_csv($data, $delimiter = ',', $enclosure = '"') {
-       $handle = fopen('php://temp', 'r+');
-       foreach ($data as $line) {
-               fputcsv($handle, $line, $delimiter, $enclosure);
-       }
-       rewind($handle);
-       while (!feof($handle)) {
-               $contents .= fread($handle, 8192);
-       }
-       fclose($handle);
-    
-       return $contents;
+
+function array_to_csv($data, $delimiter = ',', $enclosure = '"')
+{
+    $handle = fopen('php://temp', 'r+');
+    foreach ($data as $line) {
+        fputcsv($handle, $line, $delimiter, $enclosure);
+    }
+    rewind($handle);
+    $contents = '';
+    while (!feof($handle)) {
+        $contents .= fread($handle, 8192);
+    }
+    fclose($handle);
+
+    return $contents;
 }
+
+/**
+ * $data = [
+ *   ['name' => 'foo', 'id' => 1, 'title' => 'first'],
+ *   ['name' => 'foo', 'id' => 1, 'title' => 'second'],
+ *   ['name' => 'foo', 'id' => 1, 'title' => 'third'],
+ *   ['name' => 'bar', 'id' => 2, 'title' => 'first'],
+ *   ['name' => 'bar', 'id' => 2, 'title' => 'second'],
+ *   ['name' => 'bar', 'id' => 2, 'title' => 'third'],
+ *   ['name' => 'zoo', 'id' => 3, 'title' => 'first'],
+ *   ['name' => 'zoo', 'id' => 3, 'title' => 'second'],
+ * ];
+ *
+ * $groupBy = [
+ *   'name' => ['name', 'id'],
+ * ];
+ *
+ * $result = array_to_clean_csv($data, $groupBy);
+ *
+ * // result:
+ * [
+ *   ['name' => 'foo', 'id' => 1, 'title' => 'first'],
+ *   ['name' => '', 'id' => '', 'title' => 'second'],
+ *   ['name' => '', 'id' => '', 'title' => 'third'],
+ *   ['name' => 'bar', 'id' => 2, 'title' => 'first'],
+ *   ['name' => '', 'id' => '', 'title' => 'second'],
+ *   ['name' => '', 'id' => '', 'title' => 'third'],
+ *   ['name' => 'zoo', 'id' => 3, 'title' => 'first'],
+ *   ['name' => '', 'id' => '', 'title' => 'second'],
+ * ];
+ *
+ * @param array $data
+ * @param array $groupBy
+ */
+function clear_array(array $data, array $groupByToRemove)
+{
+    for ($i = count($data) - 1; $i >= 0; $i--) {
+        foreach ($groupByToRemove as $groupKey => $removeFields) {
+            if (isset($data[$i - 1][$groupKey]) && $data[$i][$groupKey] === $data[$i - 1][$groupKey]) {
+                foreach ($removeFields as $removeField) {
+                    $data[$i][$removeField] = '';
+                }
+            }
+        }
+    }
+
+    return $data;
+}
+
+/**
+ * $result = [
+ *  ['title' => '...', 'locale' => '...', ...],
+ *  ['title' => '...', 'locale' => '...', ...],
+ *  ...
+ * ];
+ *
+ * array_to_clean_csv(storage_path('clean.csv'), $result, [
+ *  'title' => ['title', 'locale', 'url', 'description', 'meta_description'],
+ *  'question' => ['question', 'question_description'],
+ * ]);
+ *
+ * @param string $file
+ * @param array $data
+ * @param array $groupByToRemove
+ */
+function array_to_clean_csv(string $file, array $data, array $groupByToRemove)
+{
+    // Add headers
+    $data = array_merge(
+        [array_keys($data[0])],
+        $data
+    );
+
+    $data = clear_array($data, $groupByToRemove);
+
+    $csv = array_to_csv($data);
+
+    file_put_contents($file, $csv);
+}
+
 
 function break_long_words(string $text, string $size = 20, string $delimiter = ' ')
 {
