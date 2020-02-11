@@ -63,3 +63,9 @@ order by position;
 #date format
 update table set date = date_format(created_at, '%Y-%m-%d %H:%i:00');
 ```
+
+#### Add column with 
+```
+apt-get install percona-toolkit
+pt-online-schema-change --print --progress time,5 --max-load Threads_running=500 --critical-load Threads_running=5000 --chunk-time 5 --set-vars "innodb_lock_wait_timeout=600" --nocheck-plan --execute -h {localhost} -u {user} --p "{password}" --alter "ADD {column} varchar(32) DEFAULT NULL"  D={database},t={table}
+```
