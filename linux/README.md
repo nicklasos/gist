@@ -159,3 +159,8 @@ make install
 siege -d3 -r10 -c100 --no-parser http://localhost
 ```
 
+### Measure response time from site
+```
+#!/bin/sh
+curl -s -o /dev/null -w '%{time_starttransfer}\n' "$@"
+```
