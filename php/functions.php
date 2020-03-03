@@ -374,3 +374,24 @@ function ab_test(string $test)
 
     return [$result, $assigned];
 }
+
+function is_json(string $json): bool
+{
+    json_decode($json);
+    if (json_last_error() === JSON_ERROR_NONE) {
+        return true;
+    }
+  
+    return false;
+}
+
+function execCmd(string $cmd): string
+{
+    $output = trim(shell_exec("$cmd 2>&1"));
+    if ($output !== "") {
+        echo "> " . $cmd . "\n";
+        echo $output;
+    }
+  
+    return $output;
+}
